@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار حفظ وفهم – سورة البقرة (٣٨-٤٨)</title>
+<style>
+  :root{
+    --paper:#f7f2e7;
+    --ink:#2f2a22;
+    --gold:#a9782f;
+    --gold-dark:#7c5a22;
+    --green:#3f6b4a;
+    --red:#a4402f;
+    --line:#e1d5b8;
+    --card:#fffdf8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Traditional Arabic","Amiri","Scheherazade New","Segoe UI",Tahoma,sans-serif;
+    background:linear-gradient(180deg,var(--paper),#efe6d0 60%,var(--paper));
+    color:var(--ink);
+    padding:24px 14px 60px;
+    line-height:1.9;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  header.top{
+    text-align:center;
+    padding:22px 18px 26px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:0 4px 18px rgba(120,90,30,.08);
+    margin-bottom:22px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::before{
+    content:"";
+    position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 10% 20%, rgba(169,120,47,.08), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(63,107,74,.08), transparent 40%);
+    pointer-events:none;
+  }
+  h1{font-size:1.5rem;margin:0 0 4px;color:var(--gold-dark);}
+  .sub{font-size:1.05rem;color:var(--ink);opacity:.85;margin:0 0 14px;}
+  .meta{
+    display:flex;justify-content:center;gap:18px;flex-wrap:wrap;
+    font-size:.95rem;margin-top:10px;
+  }
+  .meta label{display:flex;align-items:center;gap:6px;}
+  .meta input[type=text]{
+    border:none;border-bottom:2px dotted var(--gold);
+    background:transparent;font-family:inherit;font-size:1rem;
+    padding:4px 6px;width:170px;text-align:center;color:var(--ink);
+  }
+  .score-pill{
+    display:inline-block;margin-top:10px;background:var(--gold);color:#fff;
+    padding:5px 16px;border-radius:999px;font-size:.9rem;font-weight:bold;
+  }
+  section{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 20px 8px;
+    margin-bottom:18px;
+    box-shadow:0 3px 12px rgba(120,90,30,.06);
+  }
+  section h2{
+    margin:0 0 12px;
+    font-size:1.15rem;
+    color:var(--gold-dark);
+    border-bottom:2px solid var(--line);
+    padding-bottom:8px;
+  }
+  .q{
+    margin-bottom:18px;
+    padding-bottom:14px;
+    border-bottom:1px dashed var(--line);
+  }
+  .q:last-child{border-bottom:none;}
+  .q-num{
+    display:inline-block;
+    background:var(--green);
+    color:#fff;
+    width:26px;height:26px;
+    line-height:26px;
+    text-align:center;
+    border-radius:50%;
+    font-size:.85rem;
+    margin-left:8px;
+  }
+  .verse{
+    color:var(--gold-dark);
+    font-size:1.15rem;
+    font-weight:bold;
+  }
+  .prompt{margin:6px 0 8px;font-size:1rem;}
+  textarea, input[type=text].ans{
+    width:100%;
+    font-family:inherit;
+    font-size:1.08rem;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px 12px;
+    background:#fffef9;
+    color:var(--ink);
+    resize:vertical;
+  }
+  textarea{min-height:56px;}
+  input[type=text].ans{height:44px;}
+  .feedback{
+    margin-top:8px;
+    font-size:.95rem;
+    padding:8px 12px;
+    border-radius:8px;
+    display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback.correct{background:#e6f0e8;color:var(--green);border:1px solid #bcd9c2;}
+  .feedback.wrong{background:#f6e7e2;color:var(--red);border:1px solid #e6c3b8;}
+  .feedback.partial{background:#faf1de;color:#8a6a1e;border:1px solid #ecd9a8;}
+  .feedback .model{display:block;margin-top:4px;color:var(--ink);opacity:.85;}
+  .scramble-box{
+    display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;
+  }
+  .chip{
+    background:#efe6d0;
+    border:1px solid var(--gold);
+    color:var(--gold-dark);
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:1.05rem;
+  }
+  .btn-row{
+    display:flex;gap:12px;justify-content:center;
+    margin:28px 0 10px;flex-wrap:wrap;
+  }
+  button{
+    font-family:inherit;
+    font-size:1.05rem;
+    padding:12px 26px;
+    border-radius:10px;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+  }
+  #checkBtn{background:var(--gold);color:#fff;}
+  #checkBtn:hover{background:var(--gold-dark);}
+  #resetBtn{background:#fff;color:var(--red);border:1px solid var(--red);}
+  #resetBtn:hover{background:#fbeceb;}
+  #resultBox{
+    display:none;
+    text-align:center;
+    background:var(--card);
+    border:2px solid var(--gold);
+    border-radius:14px;
+    padding:20px;
+    margin-top:10px;
+  }
+  #resultBox.show{display:block;}
+  #resultBox h3{margin:0 0 6px;color:var(--gold-dark);}
+  #resultBig{font-size:2.2rem;font-weight:bold;color:var(--green);}
+  footer{
+    text-align:center;
+    color:var(--gold-dark);
+    opacity:.8;
+    margin-top:20px;
+    font-size:1.1rem;
+  }
+  @media (max-width:480px){
+    h1{font-size:1.25rem;}
+    section{padding:14px 12px 6px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>📖 اختبار حفظ وفهم</h1>
+  <p class="sub">سورة البقرة – الآيات (٣٨ - ٤٨)</p>
+  <div class="meta">
+    <label>الاسم: <input type="text" id="studentName" placeholder="اكتب اسمك"></label>
+  </div>
+  <div class="score-pill">الدرجة: <span id="totalLabel">20</span></div>
+</header>
+
+<!-- أولا: أكمل قوله تعالى -->
+<section id="sec1">
+  <h2>أولًا: أكمل قوله تعالى</h2>
+
+  <div class="q" data-answer="فَإِمَّا يَأْتِيَنَّكُمْ مِنِّي هُدًى فَمَنْ تَبِعَ هُدَايَ فَلَا خَوْفٌ عَلَيْهِمْ وَلَا هُمْ يَحْزَنُونَ">
+    <span class="q-num">1</span>
+    <div class="verse">﴿قُلْنَا اهْبِطُوا مِنْهَا جَمِيعًا...﴾</div>
+    <div class="prompt">إلى: ﴿...وَلَا هُمْ يَحْزَنُونَ﴾.</div>
+    <textarea class="answerInput" placeholder="اكتب تكملة الآية هنا"></textarea>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="وَأَوْفُوا بِعَهْدِي أُوفِ بِعَهْدِكُمْ وَإِيَّايَ فَارْهَبُونِ">
+    <span class="q-num">2</span>
+    <div class="verse">﴿يَابَنِي إِسْرَائِيلَ اذْكُرُوا نِعْمَتِيَ الَّتِي أَنْعَمْتُ عَلَيْكُمْ...﴾</div>
+    <div class="prompt">إلى: ﴿...وَإِيَّايَ فَارْهَبُونِ﴾.</div>
+    <textarea class="answerInput" placeholder="اكتب تكملة الآية هنا"></textarea>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="وَلَا تَكُونُوا أَوَّلَ كَافِرٍ بِهِ وَلَا تَشْتَرُوا بِآيَاتِي ثَمَنًا قَلِيلًا وَإِيَّايَ فَاتَّقُونِ">
+    <span class="q-num">3</span>
+    <div class="verse">﴿وَآمِنُوا بِمَا أَنْزَلْتُ مُصَدِّقًا لِمَا مَعَكُمْ...﴾</div>
+    <div class="prompt">إلى: ﴿...وَإِيَّايَ فَاتَّقُونِ﴾.</div>
+    <textarea class="answerInput" placeholder="اكتب تكملة الآية هنا"></textarea>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="وَتَنْسَوْنَ أَنْفُسَكُمْ وَأَنْتُمْ تَتْلُونَ الْكِتَابَ أَفَلَا تَعْقِلُونَ">
+    <span class="q-num">4</span>
+    <div class="verse">﴿أَتَأْمُرُونَ النَّاسَ بِالْبِرِّ...﴾</div>
+    <div class="prompt">إلى: ﴿...أَفَلَا تَعْقِلُونَ﴾.</div>
+    <textarea class="answerInput" placeholder="اكتب تكملة الآية هنا"></textarea>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="وَلَا يُقْبَلُ مِنْهَا شَفَاعَةٌ وَلَا يُؤْخَذُ مِنْهَا عَدْلٌ وَلَا هُمْ يُنْصَرُونَ">
+    <span class="q-num">5</span>
+    <div class="verse">﴿وَاتَّقُوا يَوْمًا لَا تَجْزِي نَفْسٌ عَنْ نَفْسٍ شَيْئًا...﴾</div>
+    <div class="prompt">إلى: ﴿...وَلَا هُمْ يُنْصَرُونَ﴾.</div>
+    <textarea class="answerInput" placeholder="اكتب تكملة الآية هنا"></textarea>
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<!-- ثانيا -->
+<section id="sec2">
+  <h2>ثانيًا: ما الكلمة التي جاءت...</h2>
+
+  <div class="q" data-answer="مِنِّي">
+    <span class="q-num">6</span>
+    <div class="prompt">ما الكلمة التي جاءت بعد: ﴿فَإِمَّا يَأْتِيَنَّكُمْ﴾؟</div>
+    <input type="text" class="ans answerInput" placeholder="اكتب الكلمة">
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="وَإِيَّايَ">
+    <span class="q-num">7</span>
+    <div class="prompt">ما الكلمة التي جاءت قبل: ﴿فَارْهَبُونِ﴾؟</div>
+    <input type="text" class="ans answerInput" placeholder="اكتب الكلمة">
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="بِالصَّبْرِ">
+    <span class="q-num">8</span>
+    <div class="prompt">ما الكلمة التي جاءت بعد: ﴿وَاسْتَعِينُوا﴾؟</div>
+    <input type="text" class="ans answerInput" placeholder="اكتب الكلمة">
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<!-- ثالثا: صحح الكلمة الخاطئة -->
+<section id="sec3">
+  <h2>ثالثًا: صحح الكلمة الخاطئة</h2>
+
+  <div class="q" data-answer="وَالَّذِينَ كَفَرُوا وَكَذَّبُوا بِآيَاتِنَا أُولَئِكَ أَصْحَابُ النَّارِ هُمْ فِيهَا خَالِدُونَ">
+    <span class="q-num">9</span>
+    <div class="verse">﴿وَالَّذِينَ آمَنُوا وَكَذَّبُوا بِآيَاتِنَا أُولَئِكَ أَصْحَابُ النَّارِ هُمْ فِيهَا خَالِدُونَ﴾</div>
+    <div class="prompt">اكتب الآية صحيحة كاملة:</div>
+    <textarea class="answerInput" placeholder="اكتب الآية الصحيحة"></textarea>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="وَلَا تَلْبِسُوا الْحَقَّ بِالْبَاطِلِ وَتَكْتُمُوا الْحَقَّ وَأَنْتُمْ تَعْلَمُونَ">
+    <span class="q-num">10</span>
+    <div class="verse">﴿وَلَا تَلْبِسُوا الْبَاطِلَ بِالْحَقِّ وَتَكْتُمُوا الْحَقَّ وَأَنْتُمْ تَعْلَمُونَ﴾</div>
+    <div class="prompt">اكتب الآية صحيحة كاملة:</div>
+    <textarea class="answerInput" placeholder="اكتب الآية الصحيحة"></textarea>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="وَاسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ وَإِنَّهَا لَكَبِيرَةٌ إِلَّا عَلَى الْخَاشِعِينَ">
+    <span class="q-num">11</span>
+    <div class="verse">﴿وَاسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ وَإِنَّهَا لَصَغِيرَةٌ إِلَّا عَلَى الْخَاشِعِينَ﴾</div>
+    <div class="prompt">اكتب الآية صحيحة كاملة:</div>
+    <textarea class="answerInput" placeholder="اكتب الآية الصحيحة"></textarea>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="يَابَنِي إِسْرَائِيلَ اذْكُرُوا نِعْمَتِيَ الَّتِي أَنْعَمْتُ عَلَيْكُمْ وَأَنِّي فَضَّلْتُكُمْ عَلَى الْعَالَمِينَ">
+    <span class="q-num">12</span>
+    <div class="verse">﴿يَابَنِي إِسْرَائِيلَ اذْكُرُوا نِعْمَتِيَ الَّتِي أَنْعَمْتُ عَلَيْكُمْ وَأَنِّي فَضَّلْتُكُمْ عَلَى النَّاسِ﴾</div>
+    <div class="prompt">اكتب الآية صحيحة كاملة:</div>
+    <textarea class="answerInput" placeholder="اكتب الآية الصحيحة"></textarea>
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<!-- رابعا: اكتب -->
+<section id="sec4">
+  <h2>رابعًا: اكتب</h2>
+
+  <div class="q" data-answer="وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ وَارْكَعُوا مَعَ الرَّاكِعِينَ">
+    <span class="q-num">13</span>
+    <div class="prompt">اكتب آية فيها الأمر بإقامة الصلاة وإيتاء الزكاة والركوع مع الراكعين.</div>
+    <textarea class="answerInput" placeholder="اكتب الآية"></textarea>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="وَاسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ وَإِنَّهَا لَكَبِيرَةٌ إِلَّا عَلَى الْخَاشِعِينَ">
+    <span class="q-num">14</span>
+    <div class="prompt">اكتب آية فيها الأمر بالاستعانة بالصبر والصلاة.</div>
+    <textarea class="answerInput" placeholder="اكتب الآية"></textarea>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="أَتَأْمُرُونَ النَّاسَ بِالْبِرِّ وَتَنْسَوْنَ أَنْفُسَكُمْ وَأَنْتُمْ تَتْلُونَ الْكِتَابَ أَفَلَا تَعْقِلُونَ">
+    <span class="q-num">15</span>
+    <div class="prompt">اكتب الآية التي فيها إنكار على من يأمر الناس بالبر وينسى نفسه.</div>
+    <textarea class="answerInput" placeholder="اكتب الآية"></textarea>
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<!-- خامسا: رتب الكلمات -->
+<section id="sec5">
+  <h2>خامسًا: رتب الكلمات لتكون جزءًا من آية</h2>
+
+  <div class="q" data-answer="وَارْكَعُوا مَعَ الرَّاكِعِينَ">
+    <span class="q-num">16</span>
+    <div class="scramble-box">
+      <span class="chip">الراكعين</span>
+      <span class="chip">مع</span>
+      <span class="chip">واركعوا</span>
+    </div>
+    <input type="text" class="ans answerInput" placeholder="اكتب الترتيب الصحيح">
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="وَلَا هُمْ يَحْزَنُونَ">
+    <span class="q-num">17</span>
+    <div class="scramble-box">
+      <span class="chip">يحزنون</span>
+      <span class="chip">هم</span>
+      <span class="chip">ولا</span>
+    </div>
+    <input type="text" class="ans answerInput" placeholder="اكتب الترتيب الصحيح">
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<!-- سادسا: الكلمة الناقصة -->
+<section id="sec6">
+  <h2>سادسًا: اكتب الكلمة الناقصة</h2>
+
+  <div class="q" data-answer="فَارْهَبُونِ">
+    <span class="q-num">18</span>
+    <div class="prompt">﴿وَأَوْفُوا بِعَهْدِي أُوفِ بِعَهْدِكُمْ وَإِيَّايَ ________﴾.</div>
+    <input type="text" class="ans answerInput" placeholder="اكتب الكلمة الناقصة">
+    <div class="feedback"></div>
+  </div>
+
+  <div class="q" data-answer="وَالصَّلَاةِ">
+    <span class="q-num">19</span>
+    <div class="prompt">﴿وَاسْتَعِينُوا بِالصَّبْرِ ________﴾.</div>
+    <input type="text" class="ans answerInput" placeholder="اكتب الكلمة الناقصة">
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<!-- سابعا: فهم الآيات -->
+<section id="sec7">
+  <h2>سابعًا: فهم الآيات</h2>
+  <div class="q" data-answer="فوائد شخصية">
+    <span class="q-num">20</span>
+    <div class="prompt">ما الفوائد التي تعلمتها من هذه الآيات؟ اذكر فائدتين باختصار.</div>
+    <p style="font-size:.9rem;opacity:.75;margin:0 0 8px;">يمكنك كتابة الفوائد بأسلوبك الخاص، ولا يشترط أن تطابق نموذجًا معينًا — ستُحسب هذه الفقرة صحيحة تلقائيًا عند كتابة إجابة.</p>
+    <textarea class="answerInput" placeholder="اكتب فائدتين هنا"></textarea>
+    <div class="feedback"></div>
+  </div>
+</section>
+
+<div class="btn-row">
+  <button id="checkBtn">📝 تصحيح الاختبار</button>
+  <button id="resetBtn">🔄 إعادة الاختبار</button>
+</div>
+
+<div id="resultBox">
+  <h3>📊 نتيجة الاختبار</h3>
+  <div id="resultBig">0 / 20</div>
+  <p id="resultMsg"></p>
+</div>
+
+<footer>بالتوفيق 🌷</footer>
+
+</div>
+
+<script>
+/* ====== المصحح الذكي الخارق ====== */
+
+// 1) تطبيع النص: إزالة التشكيل، توحيد الهمزات والحروف المتشابهة، إزالة الفراغات الزائدة
+function normalize(s){
+  if(!s) return "";
+  return s
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g,"") // تشكيل + تطويل
+    .replace(/[إأآٱا]/g,"ا")
+    .replace(/[ىی]/g,"ي")
+    .replace(/ة/g,"ه")
+    .replace(/[ؤئ]/g,"و")
+    .replace(/[^\u0621-\u064A\s]/g,"") // إزالة كل رمز غير عربي (علامات ترقيم، أرقام آيات..)
+    .replace(/\s+/g," ")
+    .trim()
+    .toLowerCase();
+}
+
+// 2) تطبيع أخف يُستخدم لمقارنة الكلمات المفردة (يوحّد الهمزات فقط دون حذف الألف الأخيرة الفارقة)
+function tokenize(s){
+  return normalize(s).split(" ").filter(Boolean);
+}
+
+// 3) مسافةليفنشتاين (Levenshtein Distance) لقياس الفرق بين نصين حرفًا بحرف
+function levenshtein(a, b){
+  const al = a.length, bl = b.length;
+  if(al === 0) return bl;
+  if(bl === 0) return al;
+  let prev = new Array(bl + 1);
+  let curr = new Array(bl + 1);
+  for(let j = 0; j <= bl; j++) prev[j] = j;
+  for(let i = 1; i <= al; i++){
+    curr[0] = i;
+    for(let j = 1; j <= bl; j++){
+      const cost = a[i-1] === b[j-1] ? 0 : 1;
+      curr[j] = Math.min(
+        prev[j] + 1,      // حذف
+        curr[j-1] + 1,    // إضافة
+        prev[j-1] + cost  // إبدال
+      );
+    }
+    [prev, curr] = [curr, prev];
+  }
+  return prev[bl];
+}
+
+// 4) نسبة تشابه حرفية بين 0 و 1
+function charSimilarity(a, b){
+  if(a === b) return 1;
+  const maxLen = Math.max(a.length, b.length);
+  if(maxLen === 0) return 1;
+  return 1 - (levenshtein(a, b) / maxLen);
+}
+
+// 5) نسبة تشابه على مستوى الكلمات: كم كلمة من كلمات المستخدم "تطابق أو تقارب" كلمات الإجابة الصحيحة، مع مراعاة ترتيبها
+function wordSimilarity(userWords, correctWords){
+  if(correctWords.length === 0) return userWords.length === 0 ? 1 : 0;
+
+  // محاذاة تسلسلية بسيطة (LCS-like) تسمح بحذف/زيادة كلمة دون كسر التطابق بالكامل
+  const n = userWords.length, m = correctWords.length;
+  const dp = Array.from({length: n+1}, () => new Array(m+1).fill(0));
+
+  for(let i = 1; i <= n; i++){
+    for(let j = 1; j <= m; j++){
+      // كلمتان "متطابقتان" إذا كانتا متساويتين أو متقاربتين جدًا (خطأ إملائي بسيط)
+      const sim = charSimilarity(userWords[i-1], correctWords[j-1]);
+      const match = sim >= 0.8 ? 1 : 0;
+      dp[i][j] = match
+        ? dp[i-1][j-1] + 1
+        : Math.max(dp[i-1][j], dp[i][j-1]);
+    }
+  }
+  const matched = dp[n][m];
+  return matched / m; // نسبة الكلمات الصحيحة المطابقة من إجمالي كلمات الإجابة النموذجية
+}
+
+// 6) القرار النهائي: صحيح / صحيح جزئيًا يُقبل / خاطئ
+function smartCheck(userRaw, correctRaw){
+  const userNorm = normalize(userRaw);
+  const correctNorm = normalize(correctRaw);
+
+  if(userNorm.length === 0){
+    return {status:"empty", score:0};
+  }
+
+  // تطابق تام بعد التطبيع
+  if(userNorm === correctNorm){
+    return {status:"exact", score:1};
+  }
+
+  const userWords = tokenize(userRaw);
+  const correctWords = tokenize(correctRaw);
+
+  // إجابات قصيرة (كلمة أو كلمتان): تعتمد على تشابه حرفي عالٍ لضبط الأخطاء الإملائية البسيطة فقط
+  if(correctWords.length <= 2){
+    const sim = charSimilarity(userNorm, correctNorm);
+    if(sim >= 0.88) return {status:"close", score:1, similarity:sim};
+    return {status:"wrong", score:0, similarity:sim};
+  }
+
+  // إجابات طويلة (آيات كاملة): تشابه على مستوى الكلمات لتحمّل سقوط كلمة أو خطأ إملائي بسيط
+  const wsim = wordSimilarity(userWords, correctWords);
+  const csim = charSimilarity(userNorm, correctNorm);
+  const finalSim = Math.max(wsim, csim);
+
+  if(finalSim >= 0.92) return {status:"exact", score:1, similarity:finalSim};
+  if(finalSim >= 0.80) return {status:"close", score:1, similarity:finalSim};
+  if(finalSim >= 0.60) return {status:"partial", score:0.5, similarity:finalSim};
+  return {status:"wrong", score:0, similarity:finalSim};
+}
+
+const questions = Array.from(document.querySelectorAll(".q"));
+const perQuestionPoints = 20 / questions.length;
+
+document.getElementById("checkBtn").addEventListener("click", function(){
+  let score = 0;
+  questions.forEach(q=>{
+    const input = q.querySelector(".answerInput");
+    const fb = q.querySelector(".feedback");
+    const correctAns = q.getAttribute("data-answer");
+    const userVal = input.value || "";
+
+    fb.classList.add("show");
+
+    if(q.closest("#sec7")){
+      // open-ended reflection question: any non-empty answer counts
+      if(normalize(userVal).length > 0){
+        score += perQuestionPoints;
+        fb.classList.remove("wrong");
+        fb.classList.add("correct");
+        fb.innerHTML = "أحسنت، شكرًا لمشاركة فائدتك ✅";
+      } else {
+        fb.classList.remove("correct");
+        fb.classList.add("wrong");
+        fb.innerHTML = "يرجى كتابة فائدتين قبل التصحيح.";
+      }
+      return;
+    }
+
+    const result = smartCheck(userVal, correctAns);
+    score += perQuestionPoints * result.score;
+
+    fb.classList.remove("correct","wrong","partial");
+    if(result.status === "exact"){
+      fb.classList.add("correct");
+      fb.innerHTML = "إجابة صحيحة ✅";
+    } else if(result.status === "close"){
+      fb.classList.add("correct");
+      fb.innerHTML = "إجابة صحيحة ✅ <span class='model'>(مطابقة تقريبًا مع فارق إملائي بسيط)</span>";
+    } else if(result.status === "partial"){
+      fb.classList.add("partial");
+      fb.innerHTML = "إجابة قريبة لكنها غير مكتملة، أُعطيت نصف الدرجة ⚠️<span class='model'>الإجابة الصحيحة: " + correctAns + "</span>";
+    } else {
+      fb.classList.add("wrong");
+      fb.innerHTML = "إجابة غير صحيحة ❌<span class='model'>الإجابة الصحيحة: " + correctAns + "</span>";
+    }
+  });
+
+  score = Math.round(score * 10) / 10;
+  const resultBox = document.getElementById("resultBox");
+  resultBox.classList.add("show");
+  document.getElementById("resultBig").textContent = score + " / 20";
+
+  let msg = "";
+  if(score >= 18) msg = "ممتاز! حفظ متقن وفهم رائع 🌟";
+  else if(score >= 14) msg = "جيد جدًا، راجع الأخطاء البسيطة وكررها 👍";
+  else if(score >= 10) msg = "جيد، تحتاج إلى مزيد من المراجعة 📖";
+  else msg = "يُنصح بإعادة حفظ هذه الصفحة قبل التقييم مرة أخرى 💪";
+  document.getElementById("resultMsg").textContent = msg;
+
+  resultBox.scrollIntoView({behavior:"smooth", block:"center"});
+});
+
+document.getElementById("resetBtn").addEventListener("click", function(){
+  questions.forEach(q=>{
+    q.querySelector(".answerInput").value = "";
+    const fb = q.querySelector(".feedback");
+    fb.classList.remove("show","correct","wrong");
+    fb.innerHTML = "";
+  });
+  document.getElementById("resultBox").classList.remove("show");
+  document.getElementById("studentName").value = "";
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+</script>
+</body>
+</html>
